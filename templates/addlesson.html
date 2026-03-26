@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h1>Add Lesson</h1>
+
+<form method="POST">
+
+<label>Select Course</label>
+<br><br>
+
+<select name="course_id">
+
+{% for course in courses %}
+<option value="{{ course[0] }}">{{ course[1] }}</option>
+{% endfor %}
+
+</select>
+
+<br><br>
+
+<label>Lesson Title</label>
+<br><br>
+
+<input type="text" name="lesson_title" required>
+
+<br><br>
+
+<label>Video URL</label>
+<br><br>
+
+<input type="text" name="video_url" required>
+
+<br><br>
+
+<button type="submit">Add Lesson</button>
+
+</form>
+
+<br>
+
+<a href="/admin">Back to Admin</a>
+
+{% endblock %}

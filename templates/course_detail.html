@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-3">📘 {{ course[0] }}</h2>
+
+    <!-- Progress Bar -->
+    <h5>Progress</h5>
+    <div class="progress mb-3">
+        <div class="progress-bar bg-success" 
+             style="width: {{ progress_percent }}%">
+            {{ progress_percent }}%
+        </div>
+    </div>
+
+    {% if progress_percent == 100 %}
+        <div class="alert alert-success">
+            🎉 Course Completed!
+            <br>
+            <a href="/certificate/{{ course_id }}" class="btn btn-success mt-2">
+                Download Certificate
+            </a>
+        </div>
+    {% endif %}
+
+    <h4 class="mt-4">📚 Lessons</h4>
+
+    <div class="list-group">
+
+        {% for lesson in lessons %}
+
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+
+            <div>
+                {% if lesson[0] in completed_lessons %}
+                    <span class="text-success">✔</span>
+                {% else %}
+                    <span>▶</span>
+                {% endif %}
+                {{ lesson[1] }}
+            </div>
+
+            <div>
+                <a href="/lesson/{{ lesson[0] }}" class="btn btn-sm btn-primary">
+                    Watch
+                </a>
+
+                {% if lesson[0] not in completed_lessons %}
+                <a href="/complete/{{ lesson[0] }}" class="btn btn-sm btn-success">
+                    Mark Complete
+                </a>
+                {% else %}
+                <span class="text-success ms-2">✔ Done</span>
+                {% endif %}
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <br>
+
+    <a href="/mycourses" class="btn btn-secondary">⬅ Back</a>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+
+
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="mb-3">Welcome {{name}} 🎉</h2>
+    <p class="text-muted">Role: {{ session.get('role') }}</p>
+
+    <div class="row mt-4">
+
+        <!-- View Courses -->
+        <div class="col-md-4">
+            <div class="card p-3 shadow">
+                <h5>📚 All Courses</h5>
+                <p>Browse all available courses</p>
+                <a href="/courses" class="btn btn-primary">View Courses</a>
+            </div>
+        </div>
+
+        <!-- My Courses -->
+        <div class="col-md-4">
+            <div class="card p-3 shadow">
+                <h5>🎯 My Courses</h5>
+                <p>See your enrolled courses</p>
+                <a href="/mycourses" class="btn btn-success">My Courses</a>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        {% if session.get('role') == 'admin' %}
+        <div class="col-md-4">
+            <div class="card p-3 shadow">
+                <h5>⚙ Admin Panel</h5>
+                <p>Manage courses and users</p>
+                <a href="/admin" class="btn btn-warning">Go to Admin</a>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+
