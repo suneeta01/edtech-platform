@@ -2,19 +2,42 @@
 
 {% block content %}
 
-<div style="text-align:center; border:3px solid black; padding:40px;">
+<div style="text-align:center; background:#f4f4f4; padding:30px;">
 
-<h1>Certificate of Completion</h1>
+    <div style="
+        border:10px solid gold;
+        background:white;
+        padding:40px;
+        width:70%;
+        margin:auto;
+        border-radius:10px;
+    ">
 
-<p>This is to certify that</p>
+        <h1 style="color:green;">🎓 Certificate of Completion</h1>
 
-<h2>{{ user_name }}</h2>
+        <p>This is to certify that</p>
 
-<p>has successfully completed the course</p>
+        <h2 style="font-size:28px;">{{ user_name }}</h2>
 
-<h2>{{ course_name }}</h2>
+        <p>has successfully completed the course</p>
 
-<p>Congratulations!</p>
+        <h2 style="font-size:22px;">{{ course_name }}</h2>
+
+        <p style="margin-top:20px;">🎉 Congratulations!</p>
+
+        <p style="margin-top:40px; font-size:14px;">
+            🚀 EdTech Platform <br>
+            Developed by Suneeta Pattanayak
+        </p>
+
+    </div>
+
+    <!-- ✅ Download Button -->
+    <br><br>
+    <button onclick="window.print()" 
+        style="padding:10px 20px; font-size:16px; cursor:pointer;">
+        📥 Download (Choose as PDF)
+    </button>
 
 </div>
 

@@ -9,7 +9,8 @@
     {% for course in courses %}
     <div class="col-md-4 mb-4">
         <div class="card p-3 shadow h-100">
-            <h5 class="fw-bold">{{ course[1] }}</h5>
+            <h5 class="fw-bold text-primary">{{ course[1] }}</h5>
+            <p class="text-muted">Keep going! You're making progress 🚀</p>
 
             {% set total = course[2] %}
             {% set completed = course[3] or 0 %}
@@ -21,16 +22,29 @@
 
             <!-- Progress Bar -->
             <div class="progress mb-2">
-                <div class="progress-bar" role="progressbar"
+            {% if percent < 40 %}
+            {% set color = "bg-danger" %}
+            {% elif percent < 80 %}
+            {% set color = "bg-warning" %}
+            {% else %}
+            {% set color = "bg-success" %}
+            {% endif %}
+            <div class="progress-bar {{ color }}" role="progressbar"
                      style="width: {{ percent | safe }}%;" 
                      aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">
                      {{ percent }}%
                 </div>
             </div>
 
+            <p><small>{{ completed }} / {{ total }} lessons completed</small></p>
+
             <!-- 🎉 Completed indicator -->
             {% if percent == 100 %}
             <p style="color:green;">🎉 Completed!</p>
+
+            <a href="/certificate/{{ course[0] }}" class="btn btn-warning w-100 mt-2">
+                🎓 Download Certificate
+            </a>
             {% endif %}
 
             <!-- Continue Learning button -->

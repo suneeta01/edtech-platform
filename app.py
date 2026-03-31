@@ -86,7 +86,20 @@ def admin():
     if session.get("role") != "admin":
         return "Access Denied"
 
-    return render_template("admin.html") 
+    # 🔥 Fetch all courses
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM courses")
+    courses = cursor.fetchall()
+
+    # ✅ Fetch lessons with course name (NEW PART)
+    cursor.execute("""
+    SELECT lessons.id, lessons.lesson_title, lessons.video_url, courses.course_name
+    FROM lessons
+    JOIN courses ON lessons.course_id = courses.id
+""")
+    lessons = cursor.fetchall()
+
+    return render_template("admin.html", courses=courses, lessons=lessons) 
 
 
 
@@ -379,8 +392,84 @@ def certificate(course_id):
     return render_template(
         "certificate.html",
         user_name=user_name,
-        course_name=course[0]
+        course_name=course[0] if course else "Unknown Course"
     )
+
+
+# ================= EDIT COURSE =================
+@app.route("/edit_course/<int:id>", methods=["GET", "POST"])
+def edit_course(id):
+
+    if "user" not in session or session.get("role") != "admin":
+        return "Access Denied"
+
+    cur = mysql.connection.cursor()
+
+    if request.method == "POST":
+        title = request.form["title"]
+
+        cur.execute("UPDATE courses SET course_name=%s WHERE id=%s", (title, id))
+        mysql.connection.commit()
+
+        return redirect("/admin")
+
+    cur.execute("SELECT * FROM courses WHERE id=%s", (id,))
+    course = cur.fetchone()
+
+    return render_template("edit_course.html", course=course)
+
+
+# ================= DELETE COURSE =================
+@app.route("/delete_course/<int:id>")
+def delete_course(id):
+
+    if "user" not in session or session.get("role") != "admin":
+        return "Access Denied"
+
+    cur = mysql.connection.cursor()
+
+    # delete lessons first
+    cur.execute("DELETE FROM lessons WHERE course_id=%s", (id,))
+
+    # delete course
+    cur.execute("DELETE FROM courses WHERE id=%s", (id,))
+
+    mysql.connection.commit()
+    cur.close()
+
+    return redirect("/admin")
+
+
+@app.route('/delete_lesson/<int:id>')
+def delete_lesson(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM lessons WHERE id=%s", (id,))
+    mysql.connection.commit()
+    return redirect('/admin')
+
+
+@app.route('/edit_lesson/<int:id>', methods=['GET', 'POST'])
+def edit_lesson(id):
+    cursor = mysql.connection.cursor()
+
+    if request.method == 'POST':
+        lesson_title = request.form['lesson_title']
+        video_url = request.form['video_url']
+
+        cursor.execute("""
+            UPDATE lessons
+            SET lesson_title=%s, video_url=%s
+            WHERE id=%s
+        """, (lesson_title, video_url, id))
+
+        mysql.connection.commit()
+        return redirect('/admin')
+
+    # GET request
+    cursor.execute("SELECT * FROM lessons WHERE id=%s", (id,))
+    lesson = cursor.fetchone()
+
+    return render_template('edit_lesson.html', lesson=lesson)
 
 
 if __name__ == "__main__":
