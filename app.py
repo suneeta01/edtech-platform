@@ -9,6 +9,18 @@ app.secret_key = "your_secret_key_here"  # required for sessions
 
 mysql = MySQL(app)
 
+
+# ✅ ADD THIS RIGHT HERE
+@app.route("/testdb")
+def testdb():
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT 1")
+        result = cursor.fetchone()
+        return f"Database connected ✅ Result: {result}"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
 #@app.route("/")     (this code is written to check the connection to the database, you can uncomment it to test)
 #def home():
    # cur = mysql.connection.cursor()
@@ -406,9 +418,9 @@ def edit_course(id):
     cur = mysql.connection.cursor()
 
     if request.method == "POST":
-        title = request.form["title"]
+        course_name = request.form["course_name"]
 
-        cur.execute("UPDATE courses SET course_name=%s WHERE id=%s", (title, id))
+        cur.execute("UPDATE courses SET course_name=%s WHERE id=%s", (course_name, id))
         mysql.connection.commit()
 
         return redirect("/admin")
@@ -489,8 +501,7 @@ def create_tables():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS courses (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        title VARCHAR(255),
-        description TEXT
+        course_name VARCHAR(255)
     )
     """)
 
@@ -524,6 +535,13 @@ def create_tables():
     cursor.close()
 
     return "Tables created successfully!"
+
+@app.route("/check_courses")
+def check_courses():
+    cursor = mysql.connection.cursor()
+    cursor.execute("DESCRIBE courses")
+    data = cursor.fetchall()
+    return str(data)
 
 if __name__ == "__main__":
     app.run(debug=True)
