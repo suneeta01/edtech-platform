@@ -5,6 +5,7 @@ from config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.config["MYSQL_PORT"] = 19200
 app.secret_key = "your_secret_key_here"  # required for sessions
 
 mysql = MySQL(app)
@@ -110,6 +111,8 @@ def admin():
     JOIN courses ON lessons.course_id = courses.id
 """)
     lessons = cursor.fetchall()
+
+    cursor.close()   # ✅ ADD THIS
 
     return render_template("admin.html", courses=courses, lessons=lessons) 
 
@@ -239,6 +242,11 @@ def course_detail(course_id):
     # get course name
     cur.execute("SELECT course_name FROM courses WHERE id=%s",(course_id,))
     course = cur.fetchone()
+
+
+    if not course:
+        cur.close()
+        return "Course not found ❌"
 
     course_name = course[0]
 
