@@ -502,9 +502,16 @@ def create_tables():
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100),
         email VARCHAR(100) UNIQUE,
-        password VARCHAR(255)
+        password VARCHAR(255),
+        role VARCHAR(20)
     )
     """)
+
+     # ADD ROLE COLUMN IF MISSING
+    try:
+        cursor.execute("ALTER TABLE users ADD COLUMN role VARCHAR(20)")
+    except:
+        pass  # already exists
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS courses (
@@ -542,7 +549,7 @@ def create_tables():
     mysql.connection.commit()
     cursor.close()
 
-    return "Tables created successfully!"
+    return "Tables updated successfully!"
 
 @app.route("/check_courses")
 def check_courses():
