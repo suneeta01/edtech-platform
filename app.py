@@ -567,6 +567,21 @@ def fix_admin():
     return "Done"
 
 
+@app.route('/create_user')
+def create_user():
+    cursor = mysql.connection.cursor()
+
+    cursor.execute("""
+    INSERT INTO users (name, email, password, role)
+    VALUES (%s, %s, %s, %s)
+    """, ("Suneeta", "suneeta01@gmail.com", "2026", "admin"))
+
+    mysql.connection.commit()
+    cursor.close()
+
+    return "User created"
+
+
 @app.route("/check_courses")
 def check_courses():
     cursor = mysql.connection.cursor()
