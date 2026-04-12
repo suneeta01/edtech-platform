@@ -571,15 +571,29 @@ def fix_admin():
 def create_user():
     cursor = mysql.connection.cursor()
 
+    hashed_password = generate_password_hash("2026")
+
     cursor.execute("""
     INSERT INTO users (name, email, password, role)
     VALUES (%s, %s, %s, %s)
-    """, ("Suneeta", "suneeta01@gmail.com", "2026", "admin"))
+    """, ("Suneeta", "suneeta01@gmail.com", hashed_password, "admin"))
 
     mysql.connection.commit()
     cursor.close()
 
     return "User created"
+
+
+@app.route('/delete_user')
+def delete_user():
+    cursor = mysql.connection.cursor()
+
+    cursor.execute("DELETE FROM users WHERE email=%s", ("suneeta01@gmail.com",))
+
+    mysql.connection.commit()
+    cursor.close()
+
+    return "User deleted"
 
 
 @app.route("/check_courses")
