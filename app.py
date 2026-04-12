@@ -551,6 +551,22 @@ def create_tables():
 
     return "Tables updated successfully!"
 
+
+@app.route('/fix_admin')
+def fix_admin():
+    cursor = mysql.connection.cursor()
+
+    cursor.execute(
+        "UPDATE users SET role='admin' WHERE email=%s",
+        ("suneeta01@gmail.com",)
+    )
+
+    mysql.connection.commit()
+    cursor.close()
+
+    return "Done"
+
+
 @app.route("/check_courses")
 def check_courses():
     cursor = mysql.connection.cursor()
