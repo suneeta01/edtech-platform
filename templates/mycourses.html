@@ -39,11 +39,11 @@
             <p><small>{{ completed }} / {{ total }} lessons completed</small></p>
 
             <!-- 🎉 Completed indicator -->
-            {% if percent == 100 %}
+            {% if completed == total and total > 0 %}
             <p style="color:green;">🎉 Completed!</p>
 
             <a href="/certificate/{{ course[0] }}" class="btn btn-warning w-100 mt-2">
-                🎓 Download Certificate
+            🎓 Download Certificate
             </a>
             {% endif %}
 
