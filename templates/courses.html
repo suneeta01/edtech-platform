@@ -1,4 +1,3 @@
-
 {% extends "layout.html" %}
 
 {% block content %}
@@ -13,12 +12,17 @@
         <div class="col-md-4 mb-4">
             <div class="card p-3 shadow h-100">
 
-                <h5>{{ course[1] }}</h5>
-                <p>{{ course[2] }}</p>
+                <h5 class="mb-3">{{ course[1] }}</h5>
 
-                <a href="/enroll/{{ course[0] }}" class="btn btn-primary mt-auto">
-                    Enroll
-                </a>
+                <div class="mt-auto">
+                    <a href="/enroll/{{ course[0] }}" class="btn btn-success btn-sm">
+                        Enroll
+                    </a>
+
+                    <a href="/course/{{ course[0] }}" class="btn btn-primary btn-sm">
+                        View
+                    </a>
+                </div>
 
             </div>
         </div>
