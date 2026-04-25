@@ -493,10 +493,12 @@ def edit_lesson(id):
 
 
 
+
 @app.route('/create_tables')
 def create_tables():
     cursor = mysql.connection.cursor()
 
+    # USERS
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -507,12 +509,7 @@ def create_tables():
     )
     """)
 
-     # ADD ROLE COLUMN IF MISSING
-    try:
-        cursor.execute("ALTER TABLE users ADD COLUMN role VARCHAR(20)")
-    except:
-        pass  # already exists
-
+    # COURSES
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS courses (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -520,27 +517,30 @@ def create_tables():
     )
     """)
 
+    # LESSONS (✅ FIXED)
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS lessons (
         id INT AUTO_INCREMENT PRIMARY KEY,
         course_id INT,
-        title VARCHAR(255),
-        content TEXT
+        lesson_title VARCHAR(255),
+        video_url TEXT
     )
     """)
 
+    # ENROLLMENTS (✅ FIXED)
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS enrollments (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT,
-        course_id INT
+        user_name VARCHAR(100),
+        course_name VARCHAR(255)
     )
     """)
 
+    # PROGRESS (✅ FIXED)
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS progress (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT,
+        user_name VARCHAR(100),
         lesson_id INT,
         completed BOOLEAN DEFAULT FALSE
     )
@@ -602,6 +602,23 @@ def check_courses():
     cursor.execute("DESCRIBE courses")
     data = cursor.fetchall()
     return str(data)
+
+
+@app.route('/reset_db')
+def reset_db():
+    cursor = mysql.connection.cursor()
+
+    cursor.execute("DROP TABLE IF EXISTS progress")
+    cursor.execute("DROP TABLE IF EXISTS enrollments")
+    cursor.execute("DROP TABLE IF EXISTS lessons")
+    cursor.execute("DROP TABLE IF EXISTS courses")
+    cursor.execute("DROP TABLE IF EXISTS users")
+
+    mysql.connection.commit()
+    cursor.close()
+
+    return "Database reset done!"
+
 
 if __name__ == "__main__":
     app.run(debug=True)
