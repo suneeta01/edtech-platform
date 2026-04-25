@@ -43,8 +43,8 @@ def register():
 
         cur = mysql.connection.cursor()
         cur.execute(
-            "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
-            (name, email, password),
+            "INSERT INTO users (name, email, password, role) VALUES (%s, %s, %s, %s)",
+            (name, email, password, "user"),
         )
         mysql.connection.commit()
         cur.close()
